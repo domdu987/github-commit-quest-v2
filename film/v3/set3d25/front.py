@@ -1104,43 +1104,60 @@ def finish(cam, P, samples=None, quality=None, sun=None, haze=None):
     S['exposure'] = S.get('exposure', -0.25); S['samples'] = samples or P.get('samples', 64); setup_render(sc, 'final')
 
 # ============================================================================= render + post
-def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.495, knee=0.85, iters=5):
-    """final tone step: (1) levels p1 -> 0.035 and p99 -> 0.925 with a soft knee above 0.85 (no clipping), (2) a gamma on the luma that pulls the mean to 0.51 (clamped 0.75-1.35),
-    (3) VIBRANCE (client note 28 Nov: references sit at HSV saturation 0.44-0.64): low-saturation pixels are boosted more than saturated ones, scaled around their own luma (so luma is untouched),
-    never clipping a channel, and masking near-white low-sat pixels (luma > 0.9: puppet faces stay #fef7f6) until the mean HSV saturation reaches `sat_t`."""
+def _rgb2lab(x):
+    lin = np.where(x <= 0.04045, x / 12.92, ((x + 0.055) / 1.055) ** 2.4); M = np.array([[0.4124, 0.2126, 0.0193], [0.3576, 0.7152, 0.1192], [0.1805, 0.0722, 0.9505]], np.float32)
+    xyz = (lin @ M) / np.array([0.95047, 1.0, 1.08883], np.float32); f = np.where(xyz > 0.008856, np.cbrt(xyz), 7.787 * xyz + 16 / 116)
+    return np.stack([116 * f[..., 1] - 16, 500 * (f[..., 0] - f[..., 1]), 200 * (f[..., 1] - f[..., 2])], -1)
+
+def _lab2rgb(lab):
+    fy = (lab[..., 0] + 16) / 116; fx = fy + lab[..., 1] / 500; fz = fy - lab[..., 2] / 200; f = np.stack([fx, fy, fz], -1)
+    xyz = np.where(f ** 3 > 0.008856, f ** 3, (f - 16 / 116) / 7.787) * np.array([0.95047, 1.0, 1.08883], np.float32)
+    Mi = np.linalg.inv(np.array([[0.4124, 0.2126, 0.0193], [0.3576, 0.7152, 0.1192], [0.1805, 0.0722, 0.9505]], np.float32)).astype(np.float32); lin = np.clip(xyz @ Mi, 0, 1)
+    return np.clip(np.where(lin <= 0.0031308, 12.92 * lin, 1.055 * np.power(lin, 1 / 2.4) - 0.055), 0, 1)
+
+def _rgb2hsv(a):
+    mx = a.max(2); mn = a.min(2); d = mx - mn; s = np.where(mx > 0, d / np.maximum(mx, 1e-6), 0); r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    h = np.where(d < 1e-6, 0, np.where(mx == r, ((g - b) / np.maximum(d, 1e-6)) % 6, np.where(mx == g, (b - r) / np.maximum(d, 1e-6) + 2, (r - g) / np.maximum(d, 1e-6) + 4)))
+    return h, s, mx
+
+def _hsv2rgb(h, s, v):
+    c = v * s; x = c * (1 - np.abs(h % 2 - 1)); m = v - c; hi = np.floor(h).astype(int) % 6; z = np.zeros_like(c)
+    r = np.choose(hi, [c, x, z, z, x, c]); g = np.choose(hi, [x, c, c, x, z, z]); b = np.choose(hi, [z, z, x, c, c, x]); return np.stack([r + m, g + m, b + m], -1)
+
+def grade(im, p1_t=0.04, p99_t=0.928, mean_t=0.51, sat_t=0.478, knee=0.85, iters=3, wb=(1.5, 1.5), wb_k=0.7, p98_t=0.87):
+    """final tone + colour step (producer directives): (1) levels p1 -> 0.04, p99 -> 0.928 with a soft knee above 0.85, (2) luma gamma to mean 0.51 (0.75-1.35), (3) partial gray-world white balance:
+    shift the mean Lab a*, b* toward `wb` at `wb_k` strength (lightness untouched), (4) saturation in HSV (value and hue untouched, so no channel clips): S -> S (1 + ap S) lifts the saturated accents (HSV S p98 >= 0.87),
+    then a uniform scale reaches the mean S `sat_t`; near-white low-sat pixels (puppet faces, luma > 0.9) are masked from (3) and (4).  Repeated so the steps settle."""
     a = np.asarray(im.convert('RGB')).astype(np.float32) / 255.0; W709 = np.array([0.2126, 0.7152, 0.0722], np.float32)
     def lum(x): return x @ W709
-    def hsv_sat(x):
-        sm = np.asarray(Image.fromarray((np.clip(x, 0, 1) * 255).astype(np.uint8)).resize((180, 320))).astype(np.float32) / 255; mx, mn = sm.max(2), sm.min(2); return float(np.where(mx > 0, (mx - mn) / np.maximum(mx, 1e-6), 0).mean())
-    def vib(x, k):
-        L = lum(x)[..., None]; mx = x.max(2, keepdims=True); mn = x.min(2, keepdims=True); s = (mx - mn) / np.maximum(mx, 1e-6); c = x - L
-        prot = np.clip((L - 0.88) / 0.07, 0, 1) * (1 - np.clip(s / 0.2, 0, 1)); f = 1 + k * (1 - s) * (1 - prot)
-        with np.errstate(divide='ignore', invalid='ignore'):
-            lim_hi = np.where(c > 1e-6, (1 - L) / c, 1e9).min(2, keepdims=True); lim_lo = np.where(c < -1e-6, L / -c, 1e9).min(2, keepdims=True)
-        f = np.maximum(np.minimum(f, np.minimum(lim_hi, lim_lo)), 1.0); return np.clip(L + c * f, 0, 1)
+    def prot_of(x):
+        h, s, v = _rgb2hsv(x); return np.clip((v - 0.88) / 0.07, 0, 1) * (1 - np.clip(s / 0.2, 0, 1))
+    def sat_step(x):
+        h, s, v = _rgb2hsv(x); pr = prot_of(x); best = None
+        for ap in (0.0, 0.25, 0.5, 0.8, 1.2):
+            s1 = np.clip(s * (1 + ap * s), 0, 1); lo_, hi_ = 0.3, 4.0
+            for _ in range(11):
+                mid = (lo_ + hi_) / 2; s2 = s1 * (1 + (mid - 1) * (1 - pr)); s2 = np.clip(s2, 0, 1)
+                if s2.mean() < sat_t: lo_ = mid
+                else: hi_ = mid
+            k = (lo_ + hi_) / 2; s2 = np.clip(s1 * (1 + (k - 1) * (1 - pr)), 0, 1); best = (h, s2, v)
+            if np.percentile(s2, 98) >= p98_t: break
+        return _hsv2rgb(*best)
     for it in range(iters):
         L = lum(a); lo, hi = np.percentile(L, 1), np.percentile(L, 99)
         a = (a - lo) / max(hi - lo, 1e-3) * (p99_t - p1_t) + p1_t
         k = knee; over = a > k; a = np.where(over, k + (1 - k) * np.tanh((a - k) / (1 - k)), a); a = np.clip(a, 0, 1)
-        g_lo, g_hi = 0.75, 1.35; mean = lambda g: float(np.mean(lum(np.power(np.clip(a, 1e-4, 1), g))))
-        lo_, hi_ = g_lo, g_hi
+        mean = lambda g: float(np.mean(lum(np.power(np.clip(a, 1e-4, 1), g)))); lo_, hi_ = 0.75, 1.35
         for _ in range(24):
             mid = (lo_ + hi_) / 2
             if mean(mid) > mean_t: lo_ = mid
             else: hi_ = mid
-        g = float(np.clip((lo_ + hi_) / 2, g_lo, g_hi)); a = np.power(np.clip(a, 1e-4, 1), g)
-    if hsv_sat(a) < sat_t:
-        lo_, hi_ = 0.0, 8.0
-        for _ in range(14):
-            mid = (lo_ + hi_) / 2
-            if hsv_sat(vib(a, mid)) < sat_t: lo_ = mid
-            else: hi_ = mid
-        a = vib(a, (lo_ + hi_) / 2)
-    sat = hsv_sat(a)
-    for _ in range(8):                                                              # already over-vivid (e.g. orange factory interiors): pull back to 0.49
-        if sat <= 0.50: break
-        L = lum(a)[..., None]; a = np.clip(L + (a - L) * float(np.clip(0.49 / sat, 0.3, 1.0)), 0, 1); sat = hsv_sat(a)
-    L = lum(a); lo, hi = np.percentile(L, 1), np.percentile(L, 99); a = np.clip((a - lo) / max(hi - lo, 1e-3) * (p99_t - p1_t) + p1_t, 0, 1)      # final trim so p1 / p99 land on target
+        a = np.power(np.clip(a, 1e-4, 1), float(np.clip((lo_ + hi_) / 2, 0.75, 1.35)))
+        if wb is not None:                                                                  # (3) white balance in Lab on the 180x320 statistics
+            lab = _rgb2lab(a); pr = prot_of(a); sm = lab[::4, ::4]; da = (wb[0] - float(sm[..., 1].mean())) * wb_k; db = (wb[1] - float(sm[..., 2].mean())) * wb_k
+            lab = lab.copy(); lab[..., 1] += da * (1 - pr); lab[..., 2] += db * (1 - pr); a = _lab2rgb(lab)
+        a = sat_step(a)
+    L = lum(a); lo, hi = np.percentile(L, 1), np.percentile(L, 99); a = np.clip((a - lo) / max(hi - lo, 1e-3) * (p99_t - p1_t) + p1_t, 0, 1)
     return Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8))
 
 def post(src, dst, W=720, H=1280, sharp=0.55, radius=1.1):
