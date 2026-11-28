@@ -150,7 +150,7 @@ def _tone(lin, e, gains, gam=GAMMA):
     return np.power(np.clip(to_srgb(y), 1e-5, 1), gam)
 
 
-def solve(a, luma_t=0.50, wb_t=WB_T, vib=VIB, exp_max=2.8):
+def solve(a, luma_t=float(os.environ.get("LUMA_T", 0.50)), wb_t=WB_T, vib=VIB, exp_max=2.8):
     """exposure + white-balance gains for a sharpened linear-able frame a (0..1 sRGB)"""
     lin = to_lin(a); gains = np.ones(3, np.float32); e = 1.0; sm = (slice(None, None, 4), slice(None, None, 4)); ls = lin[sm]
     for it in range(7):

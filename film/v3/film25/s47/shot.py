@@ -18,7 +18,9 @@ FIRST, LAST = G0 - 6, G1 - 1 + 6
 PRESET = "t2_hero"
 Y_T = 4.5                         # the crossing lane (set _CR y)
 D0, LENS = 21.5, 24.0
-CAM_Z, LOOK_Z = 1.3, 2.5
+CAM_Z, LOOK_Z = 3.6, 1.7
+AZ = 24.0
+TRENCH = [(0.0, -45.0), (0.0, 14.0), (7.0, 21.0), (31.0, 21.0)]
 
 
 def tank_state(g):
@@ -34,10 +36,11 @@ def cam_of(g):
     drift = T.smooth((g - (G0 + 7)) / float(G1 - 1 - G0 - 7))
     scale = (1.0 / 1.15) * (1.0 + 0.15 * pk) * (1.0 - 0.05 * drift) if g >= G0 else 1.0 / 1.15
     d = D0 / scale
-    cx = T.lerp(-3.0, 5.8, T.smooth(k * 0.85 + 0.15 * k * k))       # lateral slide, leads the tank (centre of the tank is about -1 .. +3.5)
+    cx = T.lerp(-3.4, 4.3, T.smooth(k * 0.85 + 0.15 * k * k))       # lateral slide, leads the tank (centre of the tank is about -1 .. +3.5)
     z = T.lerp(CAM_Z, CAM_Z + 0.25, k)
-    loc = (cx, Y_T - d, z)
+    az = math.radians(AZ)                                   # slightly oblique so the trench (extended toward the camera) reads as a dark slot under the nose
     look = (cx, Y_T, LOOK_Z + 0.35 * k)
+    loc = (cx - d * math.sin(az), Y_T - d * math.cos(az), z)
     return loc, look, LENS
 
 
@@ -53,7 +56,8 @@ def report(Tk, g):
 if __name__ == "__main__":
     cmd = sys.argv[1]
     gs = [g for g in C.parse(sys.argv[2]) if FIRST <= g <= LAST]
-    T.register(PRESET, "cross_hero", cards=[], cam=dict(loc=cam_of(1460)[0], look_at=cam_of(1460)[1], lens=LENS), dress_n=0.9, tune=dict(green_k=1.2, cloud_k=0.95))
+    T.register(PRESET, "cross_hero", cards=[], cam=dict(loc=cam_of(1460)[0], look_at=cam_of(1460)[1], lens=LENS), dress_n=0.9, tune=dict(green_k=1.2, cloud_k=0.95), trench0=dict(poly=TRENCH, mw=0.8, me=1.9, sb_layers=(2, 2)),
+               world=dict(F.PRESETS['cross_hero']['world'], wire_belts=[(9.0, -1.0, 10.0, 16.0, 2)], wire_coils=[]))
     Tk = T.Take(PRESET, cam_of, hooks)
     if cmd == "probe":
         Tk.pose(gs)
