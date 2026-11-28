@@ -33,7 +33,7 @@ def model_pos(g):
 def build(rig):
     rig.set_look(True); rig.open_shell(floor_col=(0.30, 0.12, 0.07))
     rig.eng = rig.actor("eng", "engineer25")
-    rig.backdrop((TC[0] - 4.5, 51.0, 0.0), -90.0, w=9.0, h=12.0, col=(0.50, 0.38, 0.27), name="plate0")
+    rig.backdrop((TC[0] - 4.5, 51.0, 0.0), -90.0, w=9.0, h=12.0, col=(0.46, 0.17, 0.09), name="plate0")
     rig.backdrop((TC[0] + 4.5, 51.0, 0.0), -90.0, w=9.0, h=12.0, col=(0.07, 0.30, 0.30), name="plate1")
     for ob in F.bpy.data.objects:
         if ob.name in ('gantry', 'chart_wood') and ob.name == 'gantry': ob.visible_shadow = False
