@@ -1,0 +1,3 @@
+00:08.928  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: hid set cards ['general25_point_stick', 'general25_point_stick_decal']
+take: built op_close_general in 8.7 s
