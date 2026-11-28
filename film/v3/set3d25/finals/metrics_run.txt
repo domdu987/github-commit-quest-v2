@@ -20,3 +20,17 @@ front_column.png                       luma 0.510 p1 0.031 p99 0.915 lc 0.0492 s
 render 79.4 s wall, 315.1 s cpu
 front_halt.png                         luma 0.510 p1 0.037 p99 0.919 lc 0.0387 sat 0.478 chroma 30.9  PASS
 render 85.1 s wall, 337.6 s cpu
+front_stuck.png                        luma 0.510 p1 0.042 p99 0.924 lc 0.0274 sat 0.478 chroma 28.2  MISS
+render 76.0 s wall, 300.7 s cpu
+front_op.png                           luma 0.510 p1 0.037 p99 0.916 lc 0.0464 sat 0.478 chroma 30.4  PASS
+render 89.4 s wall, 354.5 s cpu
+fac_wide.png                           luma 0.510 p1 0.036 p99 0.918 lc 0.0514 sat 0.478 chroma 32.3  PASS
+render 80.8 s wall, 320.3 s cpu
+fac_weigh.png                          luma 0.510 p1 0.038 p99 0.920 lc 0.0508 sat 0.478 chroma 30.2  PASS
+render 121.7 s wall, 483.7 s cpu
+fac_foreman.png                        luma 0.510 p1 0.036 p99 0.918 lc 0.0592 sat 0.478 chroma 29.3  PASS
+render 120.1 s wall, 477.5 s cpu
+fac_stencil.png                        luma 0.510 p1 0.027 p99 0.914 lc 0.0564 sat 0.478 chroma 30.2  PASS
+render 127.3 s wall, 506.5 s cpu
+fac_side.png                           luma 0.510 p1 0.031 p99 0.914 lc 0.0629 sat 0.478 chroma 29.1  PASS
+render 128.0 s wall, 507.6 s cpu
