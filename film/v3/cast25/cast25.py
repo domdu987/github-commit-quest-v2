@@ -1830,6 +1830,123 @@ def _story_new(S, M, TM):
                                                      legs=dict(preset="step", stride=0.8, crouch=0.14)))
     M["worker_c25_push_barrel"] = dict(note="shoulders into a barrel at screen-right (the barrel is a set item at hand height (1.0, 1.0)), strain face; animate lean +-3")
 
+# ============================================================================= finish: form shading, fabric texture, key-side rim
+FINISH25 = True                  # global switch (pose key finish25 0 turns it off per figure)
+FABRIC25 = {"general25": "wool", "engineer25": "wool", "worker_a25": "denim", "worker_b25": "canvas", "worker_c25": "canvas",
+            "tommy_a25": "wool", "tommy_b25": "wool", "tommy_c25": "wool", "tommy_d25": "wool",
+            "german_a25": "wool", "german_b25": "wool", "german_c25": "wool", "pilot25": "leather"}
+_FIG_ORIG = [None]
+HATRIM25 = {"brodie25": (0.40, 0.34), "pickel25": (0.42, 0.30), "peakcap25": (0.44, 0.60), "flatcap25": (0.42, 0.44), "flyhelm25": (0.40, 0.36)}
+
+
+def _finish_defs(u, kind, hw, sg, hip_y, feet_y, boot_h):
+    """gradients, fabric pattern and mask for one figure (ids carry the figure uid).  Light comes from screen-left (sg = -1) or screen-right (+1)."""
+    x_key, x_far = sg * hw, -sg * hw
+    d = []
+    d.append('<linearGradient id="%s_fh" gradientUnits="userSpaceOnUse" x1="%.4f" y1="0" x2="%.4f" y2="0">'
+             '<stop offset="0" stop-color="#ffffff" stop-opacity="0.13"/><stop offset="0.42" stop-color="#ffffff" stop-opacity="0"/>'
+             '<stop offset="0.42" stop-color="#000000" stop-opacity="0"/><stop offset="1" stop-color="#1a1020" stop-opacity="0.17"/></linearGradient>' % (u, x_key, x_far))
+    d.append('<linearGradient id="%s_fv" gradientUnits="userSpaceOnUse" x1="0" y1="%.4f" x2="0" y2="%.4f">'
+             '<stop offset="0" stop-color="#1a1020" stop-opacity="0"/><stop offset="0.20" stop-color="#1a1020" stop-opacity="0.15"/>'
+             '<stop offset="0.27" stop-color="#1a1020" stop-opacity="0.05"/><stop offset="0.62" stop-color="#1a1020" stop-opacity="0.02"/>'
+             '<stop offset="1" stop-color="#1a1020" stop-opacity="0.13"/></linearGradient>' % (u, hip_y - 0.42, feet_y))
+    if kind == "denim":
+        d.append('<pattern id="%s_fp" patternUnits="userSpaceOnUse" width="0.05" height="0.05" patternTransform="rotate(-38)">'
+                 '<rect width="0.05" height="0.016" fill="#0a1030" opacity="0.55"/><rect y="0.026" width="0.05" height="0.008" fill="#ffffff" opacity="0.5"/></pattern>' % u)
+        op = 0.08
+    elif kind == "canvas":
+        d.append('<pattern id="%s_fp" patternUnits="userSpaceOnUse" width="0.06" height="0.06">'
+                 '<path d="M0,0.015 H0.06 M0,0.045 H0.06" stroke="#201408" stroke-width="0.011" opacity="0.5"/><path d="M0.015,0 V0.06 M0.045,0 V0.06" stroke="#ffffff" stroke-width="0.009" opacity="0.45"/></pattern>' % u)
+        op = 0.08
+    elif kind == "leather":
+        d.append('<pattern id="%s_fp" patternUnits="userSpaceOnUse" width="0.07" height="0.07" patternTransform="rotate(20)">'
+                 '<circle cx="0.012" cy="0.02" r="0.007" fill="#1a0c04" opacity="0.5"/><circle cx="0.047" cy="0.05" r="0.006" fill="#ffffff" opacity="0.45"/><circle cx="0.05" cy="0.012" r="0.005" fill="#1a0c04" opacity="0.4"/></pattern>' % u)
+        op = 0.06
+    else:
+        d.append('<pattern id="%s_fp" patternUnits="userSpaceOnUse" width="0.04" height="0.04">'
+                 '<path d="M0,0.01 H0.04 M0,0.03 H0.04" stroke="#1a1008" stroke-width="0.009" opacity="0.5"/><path d="M0.01,0 V0.04 M0.03,0 V0.04" stroke="#ffffff" stroke-width="0.008" opacity="0.4"/></pattern>' % u)
+        op = 0.07
+    d.append('<linearGradient id="%s_fs" gradientUnits="userSpaceOnUse" x1="%.4f" y1="0" x2="%.4f" y2="0">'
+             '<stop offset="0.15" stop-color="#ffffff" stop-opacity="0"/><stop offset="0.35" stop-color="#ffffff" stop-opacity="0.30"/>'
+             '<stop offset="0.50" stop-color="#ffffff" stop-opacity="0"/><stop offset="0.70" stop-color="#ffffff" stop-opacity="0.16"/><stop offset="0.80" stop-color="#ffffff" stop-opacity="0"/></linearGradient>'
+             % (u, x_key * 0.9, x_far * 0.9))
+    return "".join(d), op
+
+
+def _finish(f, cast_name, pose):
+    import re
+    svg = f["svg"]
+    m = re.match(r'<g id="([^"]+)_fig" transform="scale\(([-0-9.]+) ([-0-9.]+)\)"><defs>', svg)
+    if not m:
+        return f
+    u, sx, sy = m.group(1), float(m.group(2)), float(m.group(3))
+    sx, sy = (sx if abs(sx) > 1e-6 else 1.0), (sy if abs(sy) > 1e-6 else 1.0)
+    g = pose.get
+    sg = 1.0 if _f(g("light25"), -1.0, -1.0, 1.0) > 0 else -1.0
+    rim = _f(g("rim25"), 0.6, 0.0, 1.0)
+    roll = _f(g("head_roll"), 0.0, -75.0, 75.0)
+    an = f["anchors"]
+    C = P.CAST[cast_name]
+    i = svg.index("</defs>")
+    marker = '<g transform="translate(%.4f %.4f)"><path d="' % P.FC
+    j = svg.find(marker, i)
+    if j < 0:
+        return f
+    hip = (an["hip"][0] / sx, an["hip"][1] / sy)
+    feet_y = f["feet_y"] / sy
+    hw = abs(an["shoulder_r"][0] - an["shoulder_l"][0]) / (2 * abs(sx)) + 0.42
+    kind = FABRIC25.get(cast_name, "wool")
+    boot_h = (C.get("boots") or {}).get("h", 0.1) + 0.07
+    defs, op = _finish_defs(u, kind, hw, sg, hip[1], feet_y, boot_h)
+    bx0, by0, bx1, by1 = f["bbox"]
+    bx0, bx1 = min(bx0, bx1) / abs(sx) - 0.1, max(bx0, bx1) / abs(sx) + 0.1
+    by0, by1 = by0 / sy - 0.1, by1 / sy + 0.1
+    rect = 'x="%.3f" y="%.3f" width="%.3f" height="%.3f"' % (bx0, by0, bx1 - bx0, by1 - by0)
+    mask = ('<mask id="%s_fm" maskUnits="userSpaceOnUse" %s style="mask-type:alpha"><use href="#%s_b25"/></mask>' % (u, rect, u))
+    ov = ['<g mask="url(#%s_fm)">' % u,
+          '<rect %s fill="url(#%s_fh)"/>' % (rect, u),
+          '<rect %s fill="url(#%s_fv)"/>' % (rect, u),
+          '<rect %s fill="url(#%s_fp)" opacity="%.3f"/>' % (rect, u, op)]
+    # leather sheen on the boots (every member) and over the whole pilot coat
+    ov.append('<rect x="%.3f" y="%.3f" width="%.3f" height="%.3f" fill="url(#%s_fs)" opacity="0.4"/>' % (bx0, feet_y - boot_h, bx1 - bx0, boot_h + 0.04, u))
+    if kind == "leather":
+        ov.append('<rect x="%.3f" y="%.3f" width="%.3f" height="%.3f" fill="url(#%s_fs)" opacity="0.22"/>' % (bx0, 0.4, bx1 - bx0, hip[1] + 0.2 - 0.4, u))
+    ov.append('</g>')
+    # rim: a thin light line just inside the key-side edge of the shoulder, then of the head and hat
+    rc = "#fff2d8"
+    ro = 0.85 * rim
+    pieces = []
+    if rim > 0.01:
+        sh = an["shoulder_l"] if (an["shoulder_l"][0] < an["shoulder_r"][0]) == (sg < 0) else an["shoulder_r"]
+        sh = (sh[0] / sx, sh[1] / sy)
+        pieces.append('<g transform="translate(%.4f %.4f) scale(%.0f 1)"><path d="M0.10,-0.060 Q-0.07,-0.075 -0.115,0.07" fill="none" stroke="%s" stroke-width="0.016" stroke-linecap="round" opacity="%.3f"/></g>'
+                      % (sh[0], sh[1], -sg, rc, ro * 0.8))
+    head = ""
+    if rim > 0.01:
+        ht = an["hat_top"][1] / sy - P.FC[1]
+        yt = max(ht, -0.95) + 0.04
+        xb, xt = HATRIM25.get(C.get("hat_style"), (0.40, 0.32))
+        head = ('<g transform="translate(%.4f %.4f) rotate(%.3f) scale(%.0f 1)">'
+                '<path d="M-0.455,0.12 A0.465,0.465 0 0 1 -0.30,-0.34" fill="none" stroke="%s" stroke-width="0.015" stroke-linecap="round" opacity="%.3f"/>'
+                '<path d="M%.3f,-0.30 C%.3f,%.3f %.3f,%.3f -0.06,%.3f" fill="none" stroke="%s" stroke-width="0.014" stroke-linecap="round" opacity="%.3f"/></g>'
+                % (P.FC[0], P.FC[1], roll, -sg, rc, ro * 0.8, -xb, -xt, (yt - 0.30) * 0.5, -xt * 0.7, yt, yt + 0.005, rc, ro))
+    k0 = i + len("</defs>")
+    new = (svg[:i] + defs + mask + svg[i:k0] + '<g id="%s_b25">' % u + svg[k0:j] + '</g>' + "".join(ov) + "".join(pieces) + svg[j:-4] + head + svg[-4:])
+    out = dict(f)
+    out["svg"] = new
+    return out
+
+
+def figure(cast_name, pose=None, uid="p"):
+    f = _FIG_ORIG[0](cast_name, pose, uid)
+    if not FINISH25 or not isinstance(cast_name, str) or cast_name not in NEW25 or not isinstance(f, dict):
+        return f
+    p = pose if isinstance(pose, dict) else {}
+    if _f(p.get("finish25"), 1.0, 0.0, 1.0) < 0.5:
+        return f
+    return _finish(f, cast_name, p)
+
+
 
 def register():
     if getattr(P, "_cast25_registered", False):
@@ -1846,6 +1963,8 @@ def register():
     P._norm = _norm
     P._moustache = _moustache
     P._ink_limb = _ink_limb
+    _FIG_ORIG[0] = P.figure
+    P.figure = figure
     _GL_ORIG[0] = CE._glasses
     CE._glasses = _glasses_slip
     CE.COSTUMES.update(COSTUMES25)

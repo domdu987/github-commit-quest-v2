@@ -50,6 +50,9 @@ Tommies: khaki tunic with four patch pockets, brass buttons, buff webbing (brace
 | `pour25` 0..1 | tilts `watering_can25` (64 degrees at 1); above 0.5 a thin water stream falls from the rose (full length at 0.7) |
 | `dirt25` 0..1 | heap of earth on the `shovel25` blade (above 0.5 crumbs fly above it) |
 | `fire25` 0..1 | muzzle flash and smoke puff on `mg25` |
+| `light25` -1 / +1 | key light side for the finish: -1 (default) = from screen-left, +1 = from screen-right (also flips the rim) |
+| `rim25` 0..1 | opacity of the thin light rim (default 0.6) on the key-side edge of the shoulder, head and hat; 0 = none |
+| `finish25` 0 / 1 | 0 turns the whole finish off for that figure (module switch `cast25.FINISH25`); default 1 |
 | `glasses_dy25` 0..1 | round glasses (german_b25) slide 0.15 D down the nose |
 
 CAST keys: hats `brodie25` (`cover25="hessian"`), `pickel25` (`patch25` colour, `hat_h`), `peakcap25`, `flatcap25` (`cap_style` baggy / neat / docker), `flyhelm25`; costumes `staff25`, `tunic25` (`kit25` tuple of bottle, scarf, pack, tool, `puttee25`), `waist25`, `work25` (`work_style` bib / apron / boiler), `feld25` (`kit25`: bread, roll, flask), `coat25`; `moustache_style` `walrus25`, `kaiser25`, `kitchener25`, `brush25`; `bigbeard25=dict(color, dark, light)`.
@@ -107,6 +110,10 @@ Mostly waist-up close shots on the full-body cards (the camera crops the legs). 
 ## Accent colours v2 (default for cast25; earlier films are untouched, `identical` 705/705)
 
 Face and skin whites are unchanged (#fef7f6). Raised: general scarlet band and tabs #ee2418, cheeks #f23a2e, brighter brass (#f6c21c); engineer teal waistcoat #08909c, rust-orange cap #cc5a1a; workers mustard cap #dca412, cobalt denim #2458d0, ginger #d86a1c; Tommies red muffler #e41e1a, richer Brodie greens (a #5f8c2a, c #7e9838, d #3a7a28); Germans vivid red piping and patch #ee2a20, feldgrau pushed slightly bluer (#527a72 / #587a74 / #466e66); pilot scarf #fff8de; flag pennant #ee2a1e. Khaki and feldgrau bases stay readable.
+
+## Finish (form shading, fabric, rim; cast25 members only)
+
+`cast25.figure` (wrapped over `puppet.figure`) post-processes the 13 cast25 members only, so every earlier film stays byte-identical. Inside the body / clothing / limb / front-arm shapes (an alpha mask of the figure without head, hat and top-layer arms, so faces stay exactly #fef7f6 with no texture or gradient): a side-to-side gradient (white 13 % at the key edge, dark 17 % at the far edge), a soft darker band at the bottom of the torso and toward the feet, a fabric overlay at 6-8 % opacity per member (`FABRIC25`: wool weave for the khaki tunics, feldgrau, waistcoat and general; denim twill for worker_a25; canvas for the worker_b25 apron and worker_c25 suit; leather grain plus sheen for the pilot's coat), and a leather sheen band on the boots. The ink outline is untouched. Rim: thin light arcs (about 1.5 px at D = 100) inside the key-side edge of the shoulder, the head and the hat. Gradient, pattern and mask ids carry the figure uid. Cost: 10 figures rasterise in about 1.1x the time of the flat version. Limits: texture and shading are per figure, not per garment (the Sam Browne and puttees get the same overlay as the tunic; only boots and the pilot coat get sheen); the hat rim is an approximation per hat style (`HATRIM25`); `lerp_pose` drops `light25`, `rim25`, `finish25` like the other cast25 keys.
 
 ## Ground and feet
 

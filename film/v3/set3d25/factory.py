@@ -42,11 +42,15 @@ def brick_shed(W=26.0, Dp=52.0, Hw=14.0):
     obox(mr, (0, -0.7, 11.4), X, Y, Z, 11.0, 0.2, 0.35, M['brick_w'])                            # lintel over the doors
     for sx in (-1, 1): obox(mr, (sx * 10.6, -0.7, 5.6), X, Y, Z, 0.4, 0.25, 5.6, M['brick_w'])
     obox(mr, (0, -0.8, Hw + 0.2), X, Y, Z, W + 0.6, 0.5, 0.35, M['brick_w'])                     # parapet cap
-    # sliding doors (planks, painted green) half open + their rail
-    for sx, (a, b) in ((-1, (-17.5, -10.6)), (1, (10.6, 17.5))):
-        obox(mw, ((a + b) / 2, -1.5, 5.6), X, Y, Z, (b - a) / 2, 0.15, 5.6, M['p_green'])
-        for k in range(1, 6): obox(mw, (a + k * (b - a) / 6, -1.68, 5.6), X, Y, Z, 0.08, 0.06, 5.5, M['beam'])
-        obox(mw, ((a + b) / 2, -1.68, 5.6), X, Y, Z, (b - a) / 2, 0.06, 0.1, M['beam']); obox(mw, ((a + b) / 2, -1.68, 1.4), X, Y, Z, (b - a) / 2, 0.06, 0.1, M['beam'])
+    # sliding doors (planks, painted green): two door objects on empties; set_doors(u) slides them 0 open .. 1 shut
+    S['doors'] = []
+    for sx in (-1, 1):
+        e = F.empty('door_%s' % ('L' if sx < 0 else 'R'), loc=(sx * 16.0, 0, 0)); md = MB(); wdt = 10.6
+        obox(md, (0, -1.5, 5.6), X, Y, Z, wdt / 2, 0.15, 5.6, M['p_green'])
+        for k in range(1, 6): obox(md, (-wdt / 2 + k * wdt / 6, -1.68, 5.6), X, Y, Z, 0.08, 0.06, 5.5, M['beam'])
+        obox(md, (0, -1.68, 5.6), X, Y, Z, wdt / 2, 0.06, 0.1, M['beam']); obox(md, (0, -1.68, 1.4), X, Y, Z, wdt / 2, 0.06, 0.1, M['beam']); obox(md, (0, -1.68, 9.8), X, Y, Z, wdt / 2, 0.06, 0.1, M['beam'])
+        obox(md, (-sx * (wdt / 2 - 0.6), -1.85, 5.0), X, Y, Z, 0.12, 0.1, 0.5, M['steel'])
+        ob = mkobj(md, 'door_mesh_%d' % sx, parent=e); S['doors'].append((e, sx))
     beam(mw, (-24, -1.8, 11.6), (24, -1.8, 11.6), 0.3, 0.3, M['steel'])
     # roof with skylight gaps
     holes = [(s, u0, u1, 0.1, 0.9) for s in (1, -1) for (u0, u1) in ((0.12, 0.22), (0.56, 0.66))]
@@ -56,6 +60,13 @@ def brick_shed(W=26.0, Dp=52.0, Hw=14.0):
         y = 3 + k * 6.5; beam(mw, (-W, y, Hw - 0.5), (W, y, Hw - 0.5), 0.3, 0.4, M['frame']); beam(mw, (-W, y, Hw - 0.5), (0, y, Hw + 6.2), 0.25, 0.3, M['frame']); beam(mw, (W, y, Hw - 0.5), (0, y, Hw + 6.2), 0.25, 0.3, M['frame'])
         beam(mw, (0, y, Hw - 0.5), (0, y, Hw + 6.2), 0.2, 0.25, M['frame'])
     mkobj(mb, 'shed_walls'); mkobj(mr, 'shed_trim'); mkobj(mw, 'shed_wood'); mkobj(mt, 'shed_roof')
+
+def set_doors(u, frame=None):
+    """shed doors: u 0 = open (parked either side), 1 = shut (they meet in the middle); eased"""
+    e = TK.ease(u)
+    for (emp, sx) in S['doors']:
+        emp.location = (sx * (16.0 - 10.7 * e), 0, 0)
+        if frame is not None: emp.keyframe_insert('location', frame=frame)
 
 def gantry(W=26.0, Dp=52.0, cy=22.0, cx=-6.0, hook_z=7.0, load=None):
     """overhead travelling crane: two rails along y on the side walls, a bridge girder across at y=cy, a trolley at x=cx, a chain + hook block hanging to hook_z"""
@@ -154,6 +165,38 @@ def interior_props():
     for k in range(5): L.workbench(mb, (-8 + k * 0, 0, 0), 0.1, 0.1, 0.1, 0) if False else None
     mkobj(mb, 'interior_misc', smooth=False); mkobj(mw, 'interior_racks')
 
+def build_chart(cfg):
+    """CHART TABLE in an office corner (green baize, a trench groove with parapets cut across it, a small model Mark I, a rolled plan, pins).  Hook: set_model_tank(u).  The office corner = two low plank partitions."""
+    M = S['M']; cx, cy = cfg['pos']; mb = MB(); mw = MB(); mg = MB(); X, Y, Z = (1, 0, 0), (0, 1, 0), (0, 0, 1); top = 1.9; gw = 0.45
+    def baize(b):
+        c = b.coord(); n = b.noise(55.0, 2.0, 0.6, c, None); n2 = b.noise(1.2, 2.0, 0.5, c, None); col = b.mul(b.mix(b.rng(n2, 0.3, 0.7), (0.8, 0.85, 0.8), (1.1, 1.1, 1.05)), (*F.hexl('#2f8a4a'), 1)); b.princ(col, 0.95, 0.0, b.bump(n, 0.6, 0.02))
+    M['baize'] = F.fmat('baize', baize)
+    for sg in (-1, 1): obox(mb, (cx + sg * (7.0 + gw) / 2 + sg * 0.0, cy, top - 0.1), X, Y, Z, (7.0 - gw) / 2, 3.5, 0.1, M['baize'])
+    obox(mb, (cx, cy, top - 0.1 - 0.3), X, Y, Z, gw, 3.5, 0.05, M['mud_lump'])
+    for sg in (-1, 1):
+        obox(mb, (cx + sg * (gw + 0.01), cy, top - 0.25), X, Y, Z, 0.03, 3.5, 0.15, M['crate']); obox(mg, (cx + sg * (gw + (0.3 if sg > 0 else 0.15)), cy, top + (0.1 if sg > 0 else 0.04)), X, Y, Z, (0.3 if sg > 0 else 0.15), 3.5, (0.1 if sg > 0 else 0.04), M['mud_lump'])
+    obox(mw, (cx, cy, top - 0.35), X, Y, Z, 7.2, 3.7, 0.16, M['crate'])
+    for sx in (-1, 1):
+        for sy in (-1, 1): obox(mw, (cx + sx * 6.6, cy + sy * 3.2, (top - 0.4) / 2), X, Y, Z, 0.22, 0.22, (top - 0.4) / 2, M['beam'])
+    r = rnd(4); mb.frustum((cx - 5.5, cy - 2.4, top + 0.12), (cx - 3.8, cy - 2.1, top + 0.12), 0.12, 0.12, M['p_cream'], seg=10)                                      # rolled plan
+    for k in range(6): c = (cx + r.uniform(-6, 6), cy + r.uniform(-3, 3)); mb.frustum((c[0], c[1], top), (c[0], c[1], top + 0.14), 0.025, 0.025, M['p_red'], seg=5)
+    for (px, py, w, d) in ((-18 + 0.0, 36.0, 16.0, 0.0), ): pass
+    for k in range(8): obox(mw, (cx - 8.5 + k * 2.3 if False else cx - 8.2 + k * 2.4, cy - 6.8, 2.2), X, Y, Z, 1.15, 0.1, 2.2, M['crate'])                       # partition along the front of the office
+    for k in range(7): obox(mw, (cx + 9.4, cy - 6.0 + k * 2.4, 2.2), X, Y, Z, 0.1, 1.15, 2.2, M['crate'])
+    beam(mw, (cx - 8.8, cy - 6.8, 4.5), (cx + 10.0, cy - 6.8, 4.5), 0.25, 0.25, M['beam']); beam(mw, (cx + 9.4, cy - 6.8, 4.5), (cx + 9.4, cy + 8.0, 4.5), 0.25, 0.25, M['beam'])
+    mkobj(mb, 'chart_table', smooth=False); mkobj(mw, 'chart_wood'); mkobj(mg, 'chart_mounds', smooth=True)
+    sc = 0.11; H = TK.build_tank('model', mud=0.0, stencil=False); S['tanks_h'].append(H); H.root.scale = (sc, sc, sc)
+    gm = lambda s: np.where(np.abs(s) < 4.1, -4.0, np.where((s <= -4.1) & (s > -6.7), 0.8, np.where((s >= 4.1) & (s < 6.7), 1.9, 0.0)))
+    TK.setup_crossing(H, (0, 0), 0.0, -24.0, 22.0, g=gm); S['chart'] = dict(H=H, sc=sc, o=(cx, cy), top=top); set_model_tank(cfg.get('u', 0.4))
+
+def set_model_tank(u, frame=None):
+    """slide the model Mark I up to, over and across the model trench groove (u 0..1: approach, nose lifts, grips the far parapet, tips over, off the far side); tracks scroll"""
+    C = S['chart']; H = C['H']; p = TK.crossing_pose(H, u); sc = C['sc']; H.root.location = (C['o'][0] + p['s'] * sc, C['o'][1], C['top'] + p['pos'][2] * sc)
+    H.root.rotation_euler = (0, -math.radians(p['pitch']), 0)
+    if 'tail' in H: H.tail.rotation_euler = (0, -math.radians(p['phi']), 0)
+    TK.set_drive(H, p['s'] - H.cross['s_a'], frame)
+    if frame is not None: H.root.keyframe_insert('location', frame=frame); H.root.keyframe_insert('rotation_euler', frame=frame); H.tail.keyframe_insert('rotation_euler', frame=frame)
+
 def build(preset, samples=None, quality=None):
     P = PRESETS[preset]; t0 = __import__('time').time()
     F.begin('factory', preset, P); S.update(flat=True, trenches=[], craters=[], corridors=[], mud_zones=[]); S.update(P.get('world', {})); M = S['M']
@@ -182,7 +225,10 @@ def build(preset, samples=None, quality=None):
     for (x, y, sz, yw) in P.get('small_crates', []):
         L.crate_box(mb, (x, y, 0), sz, sz * 0.8, sz * 0.7, 0.0); TK.tank_silhouette(mb, (x, y, sz * 0.35), (1, 0, 0), (0, -1, 0), (0, 0, 1), sz * 0.3, TM['paint'], TM['paint_d'], lift=sz * 0.4 + 0.02)
     mkobj(mb, 'small_crates')
-    cam = P['cam']; S['cam_loc'] = cam['loc']; S['cards'] = []
+    if P.get('doors') is not None: set_doors(P['doors'])
+    if P.get('chart'): build_chart(P['chart'])
+    if S.get('tank') and P.get('steam'): TK.set_steam(S['tank'], P['steam'])
+    cam = F.close_cam(**P['mark']) if 'mark' in P else P['cam']; S['cam_loc'] = cam['loc']; S['cards'] = []
     for (k, xy, ht) in P.get('cards', []): L.cards([(k, xy, ht)], lambda x, y: 0.0, cam['loc'])
     F.finish(cam, P, samples, quality, sun=P.get('sun', (-72.0, 28.0)))
     S['build_s'] = __import__('time').time() - t0; return F.anchors()
@@ -204,4 +250,12 @@ PRESETS = dict(
     fac_crate_open=dict(cam=dict(loc=(0.0, 6.0, 4.5), look_at=(0.0, 22.0, 6.0), lens=24), tank_on=True, tank_in_crate=True, tank=dict(pos=(0, 22), yaw=0.0, z=1.3), stages=FULL, crate=dict(x=0, y=22, open=0.8), trestles_off=True, note='shot 31'),
 )
 
+PRESETS.update(
+    fac_chart=dict(cam=dict(loc=(-15.0, 37.0, 7.6), look_at=(-18.0, 42.0, 2.0), lens=40), chart=dict(pos=(-18.0, 43.0), u=0.40), tank_on=False, note='shot 14: chart table 3/4 top-down insert, model Mark I over the model trench'),
+    fac_chart_face=dict(mark=dict(pos=(-18.0, 48.6), face_deg=-90.0, dist=5.6, lens=48, zc=2.3), chart=dict(pos=(-18.0, 43.0), u=0.40), tank_on=False, note='shot 14/15: engineer behind the chart table (mark = card position)'),
+    fac_doors=dict(cam=dict(loc=(3.0, -27.0, 3.6), look_at=(0.0, 0.0, 6.2), lens=30), doors=1.0, note='shot 13: shed doors shut, from the yard'),
+    fac_close_hull=dict(mark=dict(pos=(-11.0, 17.0), face_deg=-90.0, dist=4.2, lens=40, zc=2.2), tank=dict(pos=(-6, 22), yaw=0.0, z=0.9), trestles_off=True, note='shots 6/16: close, riveted hull plate with the hatch and tap behind (mark)'),
+    fac_close_rivet=dict(cam=dict(loc=(-8.0, 15.2, 4.4), look_at=(-8.0, 20.0, 4.3), lens=50), stages=dict(chassis=1, plates=1, rivets=0.6, tracks=0, sponsons=0, guns=0), stencil=False, note='shot 29/30: close on the hull plate, rivet rows going in'),
+    fac_close_engineer=dict(mark=dict(pos=(0.0, 46.5), face_deg=-90.0, dist=4.2, lens=40, zc=2.2), note='shots 5/15/28/63: engineer close in front of the shed back wall (mark)'),
+)
 for _p in PRESETS.values(): _p.setdefault('tune', dict(cloud_k=0.75))

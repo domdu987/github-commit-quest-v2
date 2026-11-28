@@ -365,7 +365,7 @@ def robust():
     rnd = random.Random(25)
     n = fail = 0
     garbage = (None, "x", float("nan"), float("inf"), -5, 1e9, [1, 2], {"a": 1}, True, "white")
-    keys = ("hat_off25", "hat_up25", "mg_gy25", "paint_col25", "plan_w25", "pour25", "dirt25", "fire25", "glasses_dy25", "t", "squash", "mirror", "expr", "yaw", "lean")
+    keys = ("hat_off25", "hat_up25", "mg_gy25", "paint_col25", "plan_w25", "pour25", "dirt25", "fire25", "glasses_dy25", "light25", "rim25", "finish25", "head_roll", "t", "squash", "mirror", "expr", "yaw", "lean")
     t0 = time.time()
     for name in LINEUP:
         for i in range(250):

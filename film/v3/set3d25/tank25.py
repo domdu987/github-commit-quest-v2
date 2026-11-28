@@ -230,6 +230,23 @@ def build_tank(name='tank', pos=(0, 0, 0), yaw=0.0, pitch=0.0, roll=0.0, camo=Tr
             for k in range(14): a_ = k * 2 * math.pi / 14; rod(mw, (math.cos(a_) * 0.4, 0, math.sin(a_) * 0.4), (math.cos(a_) * (R - 0.3), 0, math.sin(a_) * (R - 0.3)), 0.075, M['wheel'], 6)
             mkobj(mw, '%s_tailwheel%d' % (name, sg), parent=we); H.wheels.append(we)
         S['tank_tail'] = hinge; S['tail_axle'] = (ax, R)
+    # ---- drink-gag hardware on both hull sides: a brass tap with a spout, a drain plate below it, and a hinged hatch (plate + handle + bolts) above it (plates group, so it appears with the plates)
+    mt_ = MB(); X_ = (1, 0, 0); Z_ = (0, 0, 1)
+    for sg in (1, -1):
+        Y_ = (0, sg, 0); yy = sg * (hh + 0.02)
+        obox(mt_, (-5.0, yy + sg * 0.12, 2.9), X_, Y_, Z_, 0.55, 0.12, 0.42, M['steel_l']); obox(mt_, (-5.0, yy + sg * 0.26, 2.9), X_, Y_, Z_, 0.07, 0.07, 0.22, M['brass'])       # hatch + handle
+        for (dx, dz) in ((-0.42, -0.3), (0.42, -0.3), (-0.42, 0.3), (0.42, 0.3)): mt_.frustum((-5.0 + dx, yy + sg * 0.22, 2.9 + dz), (-5.0 + dx, yy + sg * 0.3, 2.9 + dz), 0.06, 0.04, M['rivet'], seg=6)
+        rod(mt_, (-5.0, yy, 1.7), (-5.0, yy + sg * 0.55, 1.7), 0.13, M['brass'], 10); rod(mt_, (-5.0, yy + sg * 0.55, 1.7), (-5.0, yy + sg * 0.55, 1.25), 0.1, M['brass'], 10)                  # tap + spout
+        rod(mt_, (-5.0, yy + sg * 0.3, 1.78), (-5.0, yy + sg * 0.3, 2.05), 0.04, M['brass'], 6); obox(mt_, (-5.0, yy + sg * 0.3, 2.08), X_, Y_, Z_, 0.16, 0.04, 0.04, M['brass'])             # handle
+    mkobj(mt_, name + '_tap', parent=E('plates'), smooth=False)
+    # ---- radiator steam (hidden until set_steam): a kettle-like white puff at the rear top + a water dribble down the hull
+    import lib25 as L_
+    mp_ = MB(); rs = rnd(77); sm = J.smoke_mat('smk_steam', '#f6f4ee')
+    for i in range(7): J.lump(mp_, (-9.4 - i * 0.25 + rs.uniform(-0.2, 0.2), 0.0 + rs.uniform(-0.25, 0.25), 4.6 + i * 0.55), 0.55 + 0.16 * i, sm, rs.randint(0, 9999), 10, 6, 0.2)
+    H.steam = mkobj(mp_, name + '_steam', parent=root, smooth=True, shadow=False); H.steam.hide_render = True
+    md_ = MB(); rod(md_, (-9.6, 0.4, 3.9), (-9.7, 0.4, 3.0), 0.05, M['spark'] if False else TM['paint'], 6); rod(md_, (-9.7, 0.4, 3.0), (-9.8, 0.45, 1.9), 0.04, TM['paint'], 6)
+    for k in range(5): md_.sphere((-9.7 - k * 0.02, 0.42, 2.8 - k * 0.45), 0.08, TM['paint'], 6, 4)
+    H.dribble = mkobj(md_, name + '_dribble', parent=root, smooth=True, shadow=False); H.dribble.hide_render = True
     # ---- stencil decals (hull sides, plain water-tank silhouette) + sparks rig
     if stencil:
         for sg in (1, -1):
@@ -410,6 +427,14 @@ def set_state(H, state, level=1.0, frame=None):
     elif state == 'normal':
         apply_pose(H, b['pos'], b['yaw'], b['pitch'], b['roll'], None, frame)
     H.state[state] = level
+
+def set_steam(H, level, frame=None):
+    """radiator steam like a leaky kettle (no damage): a white puff at the rear top that swells and drifts, plus a thin water dribble; level 0 hides, 1 = full puff"""
+    on = level > 0.001; s = 0.25 + 0.9 * min(1.0, level)
+    for ob, k in ((H.steam, 1.0), (H.dribble, 1.0)):
+        zs = min(1.0, level * 1.5) + 0.01; _vis(ob, on, frame); ob.scale = (s, s, s) if ob is H.steam else (1, 1, zs)
+        ob.location = (-9.4 * (1 - s), 0, 4.6 * (1 - s)) if ob is H.steam else (0, 0, 3.9 * (1 - zs))
+        if frame is not None: ob.keyframe_insert('scale', frame=frame); ob.keyframe_insert('location', frame=frame)
 
 def set_sparks(H, t, frame=None):
     """bullet pings on the hull plates (bloodless): t seconds since the burst; t < 0 = none.  Each of the 16 spots flashes for 0.16 s, staggered 0.045 s."""

@@ -767,15 +767,17 @@ def setup_world(sc, sky_k=1.0, cloud_k=1.0):
     comb = N('ShaderNodeCombineXYZ'); sx = N('ShaderNodeSeparateXYZ'); L(tc.outputs['Generated'], sx.inputs[0])
     d1 = N('ShaderNodeMath', operation='DIVIDE'); L(sx.outputs['X'], d1.inputs[0]); L(zp.outputs[0], d1.inputs[1]); d2 = N('ShaderNodeMath', operation='DIVIDE'); L(sx.outputs['Y'], d2.inputs[0]); L(zp.outputs[0], d2.inputs[1])
     L(d1.outputs[0], comb.inputs['X']); L(d2.outputs[0], comb.inputs['Y']); comb.inputs['Z'].default_value = 0.0
-    n1 = N('ShaderNodeTexNoise'); n1.inputs['Scale'].default_value = 1.15; n1.inputs['Detail'].default_value = 5.0; n1.inputs['Roughness'].default_value = 0.62; L(comb.outputs[0], n1.inputs['Vector'])
-    n2 = N('ShaderNodeTexNoise'); n2.inputs['Scale'].default_value = 5.0; n2.inputs['Detail'].default_value = 3.0; L(comb.outputs[0], n2.inputs['Vector'])
-    mixn = N('ShaderNodeMath', operation='ADD'); L(n1.outputs['Fac'], mixn.inputs[0]); L(n2.outputs['Fac'], mixn.inputs[1]); mixn.inputs[1].default_value = 0.0; L(n2.outputs['Fac'], mixn.inputs[1])
-    nm = N('ShaderNodeMath', operation='MULTIPLY'); nm.inputs[1].default_value = 0.5; L(mixn.outputs[0], nm.inputs[0]) if False else None
-    cm = N('ShaderNodeMapRange'); cm.inputs['From Min'].default_value = 0.47; cm.inputs['From Max'].default_value = 0.60; L(n1.outputs['Fac'], cm.inputs['Value'])
+    seed = float(S.get('cloud_seed', 0.0)); mp = N('ShaderNodeMapping'); k_ = 0.8 + 0.45 * ((seed * 7.31) % 1.0); mp.inputs['Location'].default_value = (seed * 3.7, seed * 2.3, 0.0); mp.inputs['Scale'].default_value = (k_, k_ * (0.85 + 0.3 * ((seed * 3.1) % 1.0)), 1.0)
+    L(comb.outputs[0], mp.inputs['Vector'])                                                  # per-preset cloud seed: offset + scale + aspect, so no two shots show the same clouds
+    n1a = N('ShaderNodeTexNoise'); n1a.inputs['Scale'].default_value = 1.15; n1a.inputs['Detail'].default_value = 5.0; n1a.inputs['Roughness'].default_value = 0.62; L(mp.outputs[0], n1a.inputs['Vector'])
+    n3 = N('ShaderNodeTexNoise'); n3.inputs['Scale'].default_value = 0.42; n3.inputs['Detail'].default_value = 2.0; L(mp.outputs[0], n3.inputs['Vector'])         # big structures: clouds of very different sizes and spacing
+    m1 = N('ShaderNodeMath', operation='MULTIPLY'); m1.inputs[1].default_value = 0.70; L(n1a.outputs['Fac'], m1.inputs[0]); m2 = N('ShaderNodeMath', operation='MULTIPLY'); m2.inputs[1].default_value = 0.50; L(n3.outputs['Fac'], m2.inputs[0])
+    n1 = N('ShaderNodeMath', operation='ADD'); L(m1.outputs[0], n1.inputs[0]); L(m2.outputs[0], n1.inputs[1]);     n2 = N('ShaderNodeTexNoise'); n2.inputs['Scale'].default_value = 5.0; n2.inputs['Detail'].default_value = 3.0; L(mp.outputs[0], n2.inputs['Vector'])
+    cm = N('ShaderNodeMapRange'); cm.inputs['From Min'].default_value = 0.55; cm.inputs['From Max'].default_value = 0.68; L(n1.outputs[0], cm.inputs['Value'])
     cm.interpolation_type = 'SMOOTHSTEP'; S['cloud_map'] = cm
     hz = N('ShaderNodeMapRange'); hz.inputs['From Min'].default_value = 0.03; hz.inputs['From Max'].default_value = 0.16; L(sep.outputs['Z'], hz.inputs['Value'])          # no clouds on the horizon line
     cmask = N('ShaderNodeMath', operation='MULTIPLY'); L(cm.outputs['Result'], cmask.inputs[0]); L(hz.outputs['Result'], cmask.inputs[1])
-    shade = N('ShaderNodeMapRange'); shade.inputs['From Min'].default_value = 0.46; shade.inputs['From Max'].default_value = 0.74; shade.inputs['To Min'].default_value = 1.0; shade.inputs['To Max'].default_value = 0.0; L(n1.outputs['Fac'], shade.inputs['Value'])
+    shade = N('ShaderNodeMapRange'); shade.inputs['From Min'].default_value = 0.54; shade.inputs['From Max'].default_value = 0.86; shade.inputs['To Min'].default_value = 1.0; shade.inputs['To Max'].default_value = 0.0; L(n1.outputs[0], shade.inputs['Value'])
     ccol = N('ShaderNodeMix', data_type='RGBA'); L(shade.outputs['Result'], ccol.inputs[0]); ccol.inputs[6].default_value = (0.42, 0.52, 0.74, 1); ccol.inputs[7].default_value = (2.0 * cloud_k, 1.98 * cloud_k, 1.9 * cloud_k, 1)
     fin = N('ShaderNodeMix', data_type='RGBA'); L(cmask.outputs[0], fin.inputs[0]); L(ramp.outputs[0], fin.inputs[6]); L(ccol.outputs[2], fin.inputs[7])
     bg = N('ShaderNodeBackground'); bg.inputs['Strength'].default_value = sky_k; L(fin.outputs[2], bg.inputs['Color']); L(bg.outputs[0], o.inputs['Surface'])
@@ -1070,12 +1072,18 @@ def build(preset, samples=None, quality=None):
     S['build_s'] = time.time() - t0
     return anchors()
 
+def close_cam(pos, face_deg, dist=4.2, lens=40, zc=2.2, ground=0.0, head=3.2):
+    """waist-up close camera for a puppet card ~3.2 D tall standing at pos=(x, y) on `ground`, facing face_deg (the card faces the camera): the camera is `dist` D away on that side at the chest height zc, level.
+    With 40 mm the head sits at ~0.30-0.45 of the frame height.  The mark (card position + facing) is stored for the cast shots (anchors()['mark']); close presets render with NO puppet."""
+    a = math.radians(face_deg); cam = dict(loc=(pos[0] + math.cos(a) * dist, pos[1] + math.sin(a) * dist, ground + zc), look_at=(pos[0], pos[1], ground + zc), lens=lens)
+    S['mark'] = dict(pos=(pos[0], pos[1], ground), face_deg=face_deg, height=head, dist=dist, lens=lens); return cam
+
 def anchors():
-    return dict(preset=S['preset'], cam=dict(S['cam']), sun_elev=S['sun_elev'], key_dir=tuple(-S['to_sun']), build_s=S.get('build_s'))
+    return dict(mark=S.get('mark'), preset=S['preset'], cam=dict(S['cam']), sun_elev=S['sun_elev'], key_dir=tuple(-S['to_sun']), build_s=S.get('build_s'))
 
 # ============================================================================= scene prologue / epilogue shared by every location
 def begin(loc, preset, P=None):
-    bpy.ops.wm.read_factory_settings(use_empty=True); sc = bpy.context.scene; S.clear(); S.update(coll=sc.collection, trench_objs=[], preset=preset, loc=loc); S.update(OVR); S.update((P or {}).get('tune', {})); J.S.clear(); J.S['coll'] = sc.collection
+    bpy.ops.wm.read_factory_settings(use_empty=True); sc = bpy.context.scene; S.clear(); S.update(coll=sc.collection, trench_objs=[], preset=preset, loc=loc); S.update(OVR); S.update((P or {}).get('tune', {})); S.setdefault('cloud_seed', (sum(ord(c) * (i + 3) for i, c in enumerate(preset)) % 997) * 0.37); J.S.clear(); J.S['coll'] = sc.collection
     setup_world(sc, S.get('sky_k', 1.0), S.get('cloud_k', 1.0)); S['M'] = None; make_materials()
     import lib25; lib25.more_materials(); S['decal_mat'] = decal_material()
     M = S['M']; M['mud_lump'] = flat('mud_lump', '#4a3622', 0.55)
