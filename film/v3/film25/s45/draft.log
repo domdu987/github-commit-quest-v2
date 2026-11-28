@@ -1,0 +1,6 @@
+00:15.900  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: built t2_steam in 15.6 s
+00:26.865  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s45/work/draft/raw/f_1380.png'
+g 1380  11.0 s wall  17.1 s cpu
+00:38.633  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film25/s45/work/draft/raw/f_1388.png'
+g 1388  11.8 s wall  17.8 s cpu
