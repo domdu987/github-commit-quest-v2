@@ -18,3 +18,5 @@ Pipeline: film/v3/film25/s21/{d25,post_d,finish,qa_write}.py (Look A: beauty 24 
 | s25 (row 25) | g 760-784 | 49 s | take.mkv (1 fr) luma 0.501 p1 0.111 p99 0.773 lc 0.0441 sat 0.422 chroma 31.9 a -3.1 b +3.9 p98 0.83 blue 0.40 warm 0.21 neut 0.07 M 70 PASS (guides off: p1,p99,sat_p98,warm_frac) |
 | s22 (row 22) | g 626-675 | 60 s | take.mkv (2 fr) luma 0.500 p1 0.104 p99 0.961 lc 0.0389 sat 0.457 chroma 36.1 a +2.1 b +4.5 p98 0.91 blue 0.35 warm 0.34 neut 0.21 M 92 PASS (guides off: p1,p99,warm_frac) |
 | s64 (rows 64+65) | g 1880-1931 (52) | ~55 s | take.mkv (2 fr)                        luma 0.482 p1 0.098 p99 0.843 lc 0.0229 sat 0.425 chroma 30.2 a -0.7 b +2.2 p98 0.96 blue 0.32 warm 0.28 neut 0.04 M 66  PASS  (guides off: p1,p99,lc,warm_frac) |
+
+All 18 plan rows delivered as 16 takes (633 frames). Deviations: no 6-frame handles rendered; no pull requests; sampled at 20 spl (s21: 24) and 70 % scale on wides; staff officers = tommy_a25 / tommy_d25 stand-ins; 27 / 26 hull backdrop swapped to a calm teal plate; s64 uses the cockpit preset only; s68's tank rear is mostly out of frame at the end; vibrance 1.4-2.4 per take (see QA.md).
