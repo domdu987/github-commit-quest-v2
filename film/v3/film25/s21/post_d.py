@@ -60,7 +60,7 @@ def shade_layer(SH, sc, al, head, hr):
     return np.clip(np.where(face[..., None], fs, s), 0, 1)
 
 
-def compose(g, wd, out_dir, edge=0.18, wb=None, gamma=None, vib=1.8, gclip=(0.55, 1.9)):
+def compose(g, wd, out_dir, edge=0.18, wb=None, gamma=None, vib=2.0, gclip=(0.55, 1.9)):
     md = json.load(open(os.path.join(wd, "meta", "g_%04d.json" % g)))
     raw = Image.open(os.path.join(wd, "beauty", "f_%04d.png" % g)).convert("RGB")
     if raw.size != (720, 1280):
