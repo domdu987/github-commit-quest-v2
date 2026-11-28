@@ -188,6 +188,23 @@ The g column of shot_plan_v2.md is authoritative (g1 exclusive). Render 6 handle
 - **Light:** puppets carry cast25 form shading, fabric texture and a key-side rim (pose keys `light25` and `rim25`). Set `light25` to match the sun side of your shot, so the rim faces the key.
 - **Sky:** real neutral daylight; clouds varied in size and spacing, never a repeated pattern.
 
+## Vivid = large areas of pure hue (client: "theirs is much more vivid"; binding)
+- **Large pure-hue area:** every C and M shot has at least one large area (≥ 15 % of the frame) of pure, clean hue. Pick from:
+  - clear saturated blue sky
+  - red brick wall
+  - the general's scarlet (cap band, collar tabs, sash)
+  - green field
+  - a yellow-ochre or teal canvas or tarp
+  - red poppies
+- **Close-shot backgrounds:** in close shots the khaki and brown tank sits against blue sky or green field, never against brown mud.
+- **Pure hues:** no earthy mixes behind characters.
+- **Per-take metrics:** every take must PASS light_metrics.py, which now also checks:
+  - colourfulness M ≥ 65
+  - |mean a*| ≤ 4 and |mean b*| ≤ 4
+  - sat p98 ≥ 0.85
+  - warm ≥ 40 % and blue ≤ 45 % of the coloured pixels
+- **Colour grade:** grade only through the set's post(). Faces stay #fef7f6 and nothing clips.
+
 ## QA (before delivering every take)
 1. Run `python3 PROJ/qa_auto.py take.mkv --first_g <first_g> --cuts <in-take cut g's or none>`. Fix every FAIL, then add QA_AUTO.md and phone_sheet.jpg.
 2. Run `python3 PROJ/qa_jitter.py` on every take with a camera move, a walk or a tank move. It must report no shake and no slide.

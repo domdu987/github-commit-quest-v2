@@ -2,10 +2,14 @@
 """LIGHT_SPEC v2 metrics. python3 light_metrics.py <png|jpg|mp4> [...]
 Per image (or per 1 fps frame of a video, averaged): mean luma, p1, p99 (Rec.709 luma on 0-1, full res),
 local contrast = mean abs neighbour luma diff on a 90x160 grey area (box) resize (horizontal and vertical, averaged),
-saturation = mean HSV saturation (180x320), chroma = mean Lab C* (180x320); neutral WB: |mean a*| <= 4 and |mean b*| <= 4 (sRGB->Lab D65; R11 reads a +2.6, b +1.7, matching the producer), HSV sat p98 >= 0.85, of coloured px (S>0.15,V>0.15) blue/cyan (H 170-260) <= 45 % and warm (H <70 or >=330) >= 40 %; neut = share of S<0.12 (info only). Captions are not masked."""
+saturation = mean HSV saturation (180x320), chroma = mean Lab C* (180x320); neutral WB: |mean a*| <= 4 and |mean b*| <= 4 (sRGB->Lab D65; R11 reads a +2.6, b +1.7, matching the producer), HSV sat p98 >= 0.85, of coloured px (S>0.15,V>0.15) blue/cyan (H 170-260) <= 45 % and warm (H <70 or >=330) >= 40 %; neut = share of S<0.12 (info only); M = Hasler-Susstrunk colourfulness (180x320) >= 65. Captions are not masked."""
 import sys, subprocess, tempfile, glob, os, numpy as np
 from PIL import Image
-T = dict(luma=(0.48, 0.55), p1=(0.02, 0.08), p99=(0.90, 0.95), lc=(0.038, 9), sat=(0.45, 0.50), chroma=(28, 999), a_mean=(-4, 4), b_mean=(-4, 4), sat_p98=(0.85, 1.01), blue_frac=(0, 0.45), warm_frac=(0.40, 1.01))  # film25 vivid target (producer, 28 Nov) overrides LIGHT_SPEC v2 sat 0.28-0.34
+T = dict(luma=(0.48, 0.55), p1=(0.02, 0.08), p99=(0.90, 0.95), lc=(0.038, 9), sat=(0.45, 0.50), chroma=(28, 999), a_mean=(-4, 4), b_mean=(-4, 4), sat_p98=(0.85, 1.01), blue_frac=(0, 0.45), warm_frac=(0.40, 1.01), M=(65, 999))  # film25 vivid target (producer, 28 Nov) overrides LIGHT_SPEC v2 sat 0.28-0.34
+def hasler(s):
+    R, G, B = (s[..., 0] * 255, s[..., 1] * 255, s[..., 2] * 255)
+    rg = R - G; yb = 0.5 * (R + G) - B
+    return float(np.hypot(rg.std(), yb.std()) + 0.3 * np.hypot(rg.mean(), yb.mean()))
 def m(im):
     im = im.convert('RGB'); a = np.asarray(im).astype(np.float32) / 255
     L = a @ np.array([0.2126, 0.7152, 0.0722], np.float32)
@@ -27,10 +31,10 @@ def m(im):
     warm = (col & ((H < 70) | (H >= 330))).sum() / nc; blue = (col & (H >= 170) & (H < 260)).sum() / nc
     return dict(luma=L.mean(), p1=np.percentile(L, 1), p99=np.percentile(L, 99), lc=lc, sat=sat, chroma=chroma,
                 a_mean=A.mean(), b_mean=B.mean(), sat_p98=np.percentile(S, 98), blue_frac=blue, warm_frac=warm,
-                neutral=(S < 0.12).mean())
+                neutral=(S < 0.12).mean(), M=hasler(s))
 def fmt(name, d):
     ok = all(T[k][0] <= d[k] <= T[k][1] for k in T)
-    return f"{name:38s} luma {d['luma']:.3f} p1 {d['p1']:.3f} p99 {d['p99']:.3f} lc {d['lc']:.4f} sat {d['sat']:.3f} chroma {d['chroma']:.1f} a {d['a_mean']:+.1f} b {d['b_mean']:+.1f} p98 {d['sat_p98']:.2f} blue {d['blue_frac']:.2f} warm {d['warm_frac']:.2f} neut {d['neutral']:.2f}  {'PASS' if ok else 'MISS'}"
+    return f"{name:38s} luma {d['luma']:.3f} p1 {d['p1']:.3f} p99 {d['p99']:.3f} lc {d['lc']:.4f} sat {d['sat']:.3f} chroma {d['chroma']:.1f} a {d['a_mean']:+.1f} b {d['b_mean']:+.1f} p98 {d['sat_p98']:.2f} blue {d['blue_frac']:.2f} warm {d['warm_frac']:.2f} neut {d['neutral']:.2f} M {d['M']:.0f}  {'PASS' if ok else 'MISS'}"
 for p in sys.argv[1:]:
     if p.endswith(('.mp4', '.mkv', '.mov')):
         td = tempfile.mkdtemp(); subprocess.run(['ffmpeg', '-v', 'error', '-i', p, '-vf', 'fps=1', f'{td}/f%03d.png'], check=True)
